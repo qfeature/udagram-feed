@@ -9,17 +9,20 @@ const router: Router = Router();
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (!req.headers || !req.headers.authorization) {
+    console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: No authorization headers.` ); //Logging
     return res.status(401).send({message: 'No authorization headers.'});
   }
 
   const tokenBearer = req.headers.authorization.split(' ');
   if (tokenBearer.length != 2) {
+    console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Malformed token.` ); //Logging
     return res.status(401).send({message: 'Malformed token.'});
   }
 
   const token = tokenBearer[1];
   return jwt.verify(token, c.config.jwt.secret, (err, decoded) => {
     if (err) {
+      console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Failed to authenticate.` ); //Logging
       return res.status(500).send({auth: false, message: 'Failed to authenticate.'});
     }
     return next();
@@ -35,6 +38,8 @@ router.get('/', async (req: Request, res: Response) => {
     }
   });
   res.send(items);
+
+  console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Get all feed items: ${items}` ); //Logging
 });
 
 // Get a feed resource
@@ -43,6 +48,8 @@ router.get('/:id',
       const {id} = req.params;
       const item = await FeedItem.findByPk(id);
       res.send(item);
+
+      console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Get information for feed ${id}: ${JSON.stringify(item)}`); //Logging
     });
 
 // Get a signed url to put a new item in the bucket
@@ -52,6 +59,7 @@ router.get('/signed-url/:fileName',
       const {fileName} = req.params;
       const url = AWS.getPutSignedUrl(fileName);
       res.status(201).send({url: url});
+      console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Get a signed URL.` ); //Logging
     });
 
 // Create feed with metadata
@@ -62,10 +70,12 @@ router.post('/',
       const fileName = req.body.url; // same as S3 key name
 
       if (!caption) {
+        console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Caption is required or malformed.` ); //Logging
         return res.status(400).send({message: 'Caption is required or malformed.'});
       }
 
       if (!fileName) {
+        console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: File url is required.` ); //Logging
         return res.status(400).send({message: 'File url is required.'});
       }
 
@@ -78,6 +88,8 @@ router.post('/',
 
       savedItem.url = AWS.getGetSignedUrl(savedItem.url);
       res.status(201).send(savedItem);
+
+      console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Create feed item with caption ${caption} and fileName ${fileName}` ); //Logging
     });
 
 export const FeedRouter: Router = router;

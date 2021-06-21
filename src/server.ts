@@ -34,6 +34,10 @@ import {V0_FEED_MODELS} from './controllers/v0/model.index';
     res.send( '/api/v0/' );
   } );
 
+  // Health check. Added this for liveness probe.
+  app.get("/health", (req, res, next) => {
+    res.status(200).send("ok");
+  });
 
   // Start the Server
   app.listen( port, () => {
