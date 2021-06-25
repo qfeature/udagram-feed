@@ -17,6 +17,21 @@ spec:
       containers:
       - name: udagram-feed
         image: qdockerfy/udagram-feed
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 60
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "1024Mi"
+            cpu: "500m"
         env:
         - name: POSTGRES_USERNAME
           valueFrom:
