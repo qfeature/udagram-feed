@@ -19,12 +19,6 @@ spec:
         image: qdockerfy/udagram-feed
         ports:
         - containerPort: 8080
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 60
         resources:
           requests:
             memory: "64Mi"
