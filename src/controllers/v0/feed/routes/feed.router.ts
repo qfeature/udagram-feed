@@ -39,7 +39,7 @@ router.get('/', async (req: Request, res: Response) => {
   });
   res.send(items);
 
-  console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Get all feed items: ${items}` ); //Logging
+  console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Get all feed items: ${JSON.stringify(items)}` ); //Logging
 });
 
 // Get a feed resource
