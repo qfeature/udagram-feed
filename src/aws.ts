@@ -3,7 +3,9 @@ import {config} from './config/config';
 
 
 // Configure AWS
+console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: The config.aws_profile BEFORE is ${config.aws_profile}`); //Logging
 if (config.aws_profile !== "DEPLOYED") {
+  console.log(new Date().toLocaleString() + `: UDAGRAM-FEED: Falls into the DEPLOYED check.`); //Logging
   const credentials = new AWS.SharedIniFileCredentials({profile: config.aws_profile});
   AWS.config.credentials = credentials;
 }
