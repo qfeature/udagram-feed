@@ -73,4 +73,12 @@ spec:
             secretKeyRef:
               name: udagram-secret
               key: URL
+        volumeMounts:
+        - name: udagram-aws-secret
+          mountPath: "/root/.aws/"
+          readOnly: true
       restartPolicy: Always
+      volumes:
+      - name: udagram-aws-secret
+        secret:
+          secretName: udagram-aws-secret
